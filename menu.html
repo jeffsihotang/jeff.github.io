@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Menu</title>
+  <style>
+    /* ====== GENERAL STYLING ====== */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: black;
+      overflow-x: hidden;
+      background: white;
+    }
+
+    h1 {
+      background: #0056d6;
+      color: white;
+      padding: 15px;
+      margin: 0;
+      font-size: 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10; /* stays above floating symbols */
+    }
+
+    /* ====== BACKGROUND SYMBOLS ====== */
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none; /* prevent blocking clicks */
+    }
+
+    .symbol {
+      position: absolute;
+      font-size: 28px;
+      font-weight: bold;
+      color: rgba(0,0,0,0.15);
+      animation: float 10s linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(110vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ====== FLOATING EQUATIONS ====== */
+    .equation {
+      position: absolute;
+      color: rgba(0,0,0,0.25);
+      font-family: 'Courier New', monospace;
+      font-size: 20px;
+      animation: moveEquation 15s linear infinite;
+    }
+
+    @keyframes moveEquation {
+      from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      to { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ====== BUTTONS ====== */
+    .btn, .btn1, .btn2 {
+      background: #0056d6;
+      color: white;
+      border-radius: 20px;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s, background 0.3s;
+      position: relative;
+      z-index: 10; /* ensure visible above background */
+    }
+
+    .btn:hover, .btn1:hover, .btn2:hover {
+      background: #003e9c;
+      transform: scale(1.05);
+    }
+
+    .btn { padding: 10px 20px; }
+    .btn1 { padding: 20px 30px; font-size: 24px; }
+    .btn2 { padding: 5px 100px; font-size: 24px; }
+
+    /* ====== CONTENT BOX ====== */
+    .box {
+      background: #0056d6;
+      color: white;
+      border-radius: 10px;
+      padding: 50px;
+      box-shadow: 4px 4px 10px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10; /* above background */
+    }
+
+    table {
+      margin: auto;
+      height: 30px;
+      position: relative;
+      z-index: 10; /* keeps all content visible */
+    }
+
+    td {
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="background" id="background"></div>
+
+  <h1>Games Perkalian Cepat</h1>
+
+  <table align="center">
+    <tr>
+      <td width="756"><a href="kesulitan.html" class="btn2">Info</a></td>
+    </tr>
+    <tr>
+      <td height="282">
+        <div class="box">
+          <p>Website <strong>Game Perkalian Cepat</strong> ini dirancang sebagai media pembelajaran interaktif untuk melatih keterampilan berhitung perkalian, khususnya bagi siswa SMA. Melalui permainan yang sederhana namun menantang, pengguna diajak untuk berlatih menjawab soal perkalian dengan cepat, tepat, dan konsisten.</p>
+          <p>Tujuan utama dari website ini adalah:</p>
+          <ol>
+            <li>Membantu siswa meningkatkan kecepatan dalam berhitung perkalian.</li>
+            <li>Menumbuhkan minat belajar matematika melalui pendekatan yang menyenangkan.</li>
+            <li>Menyediakan sarana latihan mandiri yang dapat diakses kapan saja.</li>
+          </ol>
+          <p>Website ini terdiri dari beberapa bagian:</p>
+          <ul>
+            <li><strong>Menu Utama</strong>: halaman awal untuk memilih fitur permainan.</li>
+            <li><strong>Pilihan Kesulitan</strong>: siswa dapat memilih level soal sesuai kemampuan (mudah, sedang, sulit).</li>
+            <li><strong>Awal Permainan</strong>: petunjuk singkat sebelum permainan dimulai.</li>
+            <li><strong>Game Perkalian</strong>: inti dari latihan, di mana siswa harus menjawab soal perkalian dalam waktu terbatas.</li>
+            <li><strong>Akhir Permainan</strong>: menampilkan skor, kecepatan, dan ketepatan sebagai umpan balik.</li>
+          </ul>
+          <p>Diharapkan dengan menggunakan website ini, siswa dapat lebih terbiasa dalam mengerjakan perkalian secara cepat, sehingga keterampilan berhitung mereka meningkat dan dapat mendukung pemahaman matematika secara keseluruhan.</p>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td height="117"><a href="kesulitan.html" class="btn1">Mulai</a></td>
+    </tr>
+  </table>
+
+  <script>
+    // ====== GENERATE FLOATING MATH SYMBOLS ======
+    const symbols = ['+', '-', '×', '÷', '=', '√', 'π', '∑', 'Δ', '∞', '∫', '%', '^'];
+    const background = document.getElementById('background');
+
+    for (let i = 0; i < 40; i++) {
+      const symbol = document.createElement('div');
+      symbol.classList.add('symbol');
+      symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      symbol.style.left = Math.random() * 100 + 'vw';
+      symbol.style.animationDuration = 8 + Math.random() * 12 + 's';
+      symbol.style.fontSize = 20 + Math.random() * 30 + 'px';
+      background.appendChild(symbol);
+    }
+
+    // ====== ADD FLOATING EQUATIONS ======
+    const equations = [
+      'E = mc²', 'a² + b² = c²', '∫x dx', 'F = ma', 
+      'Δx / Δt', 'sin²θ + cos²θ = 1', 'log(xy) = log x + log y', 
+      'Σn = n(n+1)/2', 'V = IR', 'x² - 4x + 4 = 0'
+    ];
+
+    for (let i = 0; i < 10; i++) {
+      const eq = document.createElement('div');
+      eq.classList.add('equation');
+      eq.textContent = equations[Math.floor(Math.random() * equations.length)];
+      eq.style.left = Math.random() * 100 + 'vw';
+      eq.style.animationDuration = 10 + Math.random() * 10 + 's';
+      eq.style.fontSize = 18 + Math.random() * 10 + 'px';
+      background.appendChild(eq);
+    }
+  </script>
+</body>
+</html>

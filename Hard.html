@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Main Game</title>
+  <style>
+    /* ====== GENERAL STYLING ====== */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: black;
+      overflow-x: hidden;
+      background: white;
+    }
+
+    h1 {
+      background:  #e42c2c;
+      color: white;
+      padding: 15px;
+      margin: 0;
+      font-size: 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ====== BACKGROUND SYMBOLS ====== */
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .symbol {
+      position: absolute;
+      font-size: 28px;
+      font-weight: bold;
+      color: rgba(0,0,0,0.15);
+      animation: float 10s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .equation {
+      position: absolute;
+      color: rgba(0,0,0,0.25);
+      font-family: 'Courier New', monospace;
+      font-size: 20px;
+      animation: moveEquation 15s linear infinite;
+    }
+
+    @keyframes moveEquation {
+      from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      to { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ====== CONTENT ====== */
+    .btn {
+      background:  #e42c2c;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin: 10px;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+      transition: transform 0.2s, background 0.3s;
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn:hover {
+      background: #cc7500;
+      transform: scale(1.05);
+    }
+
+    input {
+      padding: 5px;
+      width: 100px;
+      text-align: center;
+      font-size: 16px;
+      position: relative;
+      z-index: 10;
+    }
+
+    table {
+      margin: auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    td { padding: 15px; text-align: center; }
+
+    .info {
+      font-size: 18px;
+      position: relative;
+      z-index: 10;
+    }
+
+    h2 {
+      background:  #e42c2c;
+      color: white;
+      padding: 10px;
+      border-radius: 15px;
+      display: inline-block;
+      position: relative;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="background" id="background"></div>
+
+  <h1>Games Perkalian Cepat</h1>
+  <table>
+    <tr>
+      <td><h2>Hard</h2></td>
+    </tr>
+    <tr>
+      <td class="info">
+        Skor : <span id="skor">0</span><br>
+        <span id="waktu">60</span> Detik<br>
+        <span id="soal"></span>
+      </td>
+    </tr>
+    <tr>
+      <td><input type="number" id="jawaban" placeholder="Jawab di sini"></td>
+    </tr>
+    <tr><td><button class="btn" onclick="cekJawaban()">Input</button></td></tr>
+  </table>
+
+  <script>
+    // ====== BACKGROUND EFFECT ======
+    const symbols = ['+', '-', '×', '÷', '=', '√', 'π', '∑', 'Δ', '∞', '∫', '%', '^'];
+    const background = document.getElementById('background');
+
+    for (let i = 0; i < 40; i++) {
+      const symbol = document.createElement('div');
+      symbol.classList.add('symbol');
+      symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      symbol.style.left = Math.random() * 100 + 'vw';
+      symbol.style.animationDuration = 8 + Math.random() * 12 + 's';
+      symbol.style.fontSize = 20 + Math.random() * 30 + 'px';
+      background.appendChild(symbol);
+    }
+
+    const equations = [
+      'E = mc²', 'a² + b² = c²', '∫x dx', 'F = ma',
+      'Δx / Δt', 'sin²θ + cos²θ = 1', 'Σn = n(n+1)/2', 'V = IR'
+    ];
+    for (let i = 0; i < 10; i++) {
+      const eq = document.createElement('div');
+      eq.classList.add('equation');
+      eq.textContent = equations[Math.floor(Math.random() * equations.length)];
+      eq.style.left = Math.random() * 100 + 'vw';
+      eq.style.animationDuration = 10 + Math.random() * 10 + 's';
+      eq.style.fontSize = 18 + Math.random() * 10 + 'px';
+      background.appendChild(eq);
+    }
+
+    // ====== GAME LOGIC ======
+    let skor = parseInt(localStorage.getItem("skor")) || 0;
+    let waktu = parseInt(localStorage.getItem("waktu")) || 60;
+    let interval;
+    const soalEl = document.getElementById("soal");
+    const skorEl = document.getElementById("skor");
+    const waktuEl = document.getElementById("waktu");
+    const inputEl = document.getElementById("jawaban");
+
+    function buatSoal() {
+      let level = localStorage.getItem("kesulitan");
+      let max = 20;
+      let a = Math.floor(Math.random() * max) + 1;
+      let b = Math.floor(Math.random() * max) + 1;
+      soalEl.textContent = `${a} x ${b} = ?`;
+      soalEl.dataset.jawab = a * b;
+    }
+
+    function cekJawaban() {
+      let jawaban = inputEl.value;
+      if (parseInt(jawaban) === parseInt(soalEl.dataset.jawab)) {
+        skor++;
+        localStorage.setItem("skor", skor);
+        skorEl.textContent = skor;
+      }
+      inputEl.value = "";
+      buatSoal();
+      inputEl.focus();
+    }
+
+    function startTimer() {
+      interval = setInterval(() => {
+        waktu--;
+        waktuEl.textContent = waktu;
+        localStorage.setItem("waktu", waktu);
+        if (waktu <= 0) {
+          clearInterval(interval);
+          window.location.href = "akhir.html";
+        }
+      }, 1000);
+    }
+
+    inputEl.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") cekJawaban();
+    });
+
+    skorEl.textContent = skor;
+    waktuEl.textContent = waktu;
+    buatSoal();
+    startTimer();
+    inputEl.focus();
+  </script>
+</body>
+</html>

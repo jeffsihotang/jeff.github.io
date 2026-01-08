@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Akhir Game</title>
+
+  <style>
+    /* ===== GLOBAL ===== */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background: white;
+      overflow-x: hidden;
+    }
+
+    /* ===== COLOR CYCLE ANIMATION ===== */
+    @keyframes colorShift {
+      0%   { background: #e42c2c; }
+      33%  { background: #24bf4c; }
+      66%  { background: #ff9300; }
+      100% { background: #e42c2c; }
+    }
+
+    @keyframes gradientShift {
+      0%   { background: linear-gradient(45deg, #e42c2c, #ff6969); }
+      33%  { background: linear-gradient(45deg, #24bf4c, #8fffab); }
+      66%  { background: linear-gradient(45deg, #ff9300, #ffd08a); }
+      100% { background: linear-gradient(45deg, #e42c2c, #ff6969); }
+    }
+
+    /* ===== UI ELEMENTS WITH ANIMATION ===== */
+    h1 {
+      color: white;
+      padding: 15px;
+      margin: 0;
+      animation: colorShift 6s infinite linear;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 20;
+    }
+
+    .box-title {
+      color: white;
+      padding: 10px;
+      border-radius: 15px;
+      display: inline-block;
+      animation: colorShift 6s infinite linear;
+    }
+
+    .btn {
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      margin: 10px;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 18px;
+      animation: colorShift 6s infinite linear;
+      transition: transform 0.2s;
+      position: relative;
+      z-index: 50;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .btn:hover {
+      transform: scale(1.07);
+    }
+
+    table {
+      margin: auto;
+      margin-top: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    td {
+      padding: 15px;
+      font-size: 18px;
+    }
+
+    /* ===== FLOATING BACKGROUND ===== */
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .symbol {
+      position: absolute;
+      font-size: 28px;
+      font-weight: bold;
+      color: rgba(0,0,0,0.2);
+      animation: float 10s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .equation {
+      position: absolute;
+      color: rgba(0,0,0,0.3);
+      font-size: 20px;
+      font-family: "Courier New", monospace;
+      animation: moveEq 15s linear infinite;
+    }
+
+    @keyframes moveEq {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FLOATING MATH BACKGROUND -->
+  <div class="background" id="background"></div>
+
+  <h1>Games Perkalian Cepat</h1>
+
+  <table>
+    <tr>
+      <td>
+        <h2 class="box-title">Game Telah Selesai!</h2>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="info">
+        Skor Akhir : <span id="skor">0</span><br>
+        Waktu Habis!
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="kesulitan.html" class="btn">Main Lagi</a>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="menu.html" class="btn">Menu</a>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+    /* Show final score */
+    document.getElementById("skor").textContent =
+      localStorage.getItem("skor") || 0;
+
+    /* FLOATING SYMBOLS */
+    const background = document.getElementById("background");
+    const symbols = ['+', '-', '×', '÷', '=', '√', 'π', '∑', 'Δ', '∞', '∫', '%', '^'];
+
+    for (let i = 0; i < 40; i++) {
+      const s = document.createElement("div");
+      s.classList.add("symbol");
+      s.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.fontSize = (25 + Math.random() * 25) + "px";
+      s.style.animationDuration = (8 + Math.random() * 12) + "s";
+      background.appendChild(s);
+    }
+
+    /* FLOATING EQUATIONS */
+    const equations = [
+      'E = mc²','a² + b² = c²','F = ma','∫x dx','V = IR',
+      'sin²θ + cos²θ = 1','πr²','Σn = n(n+1)/2'
+    ];
+
+    for (let i = 0; i < 12; i++) {
+      const e = document.createElement("div");
+      e.classList.add("equation");
+      e.textContent = equations[Math.floor(Math.random() * equations.length)];
+      e.style.left = Math.random() * 100 + "vw";
+      e.style.fontSize = (18 + Math.random() * 12) + "px";
+      e.style.animationDuration = (10 + Math.random() * 10) + "s";
+      background.appendChild(e);
+    }
+  </script>
+
+</body>
+</html>
